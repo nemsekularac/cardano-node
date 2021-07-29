@@ -169,9 +169,11 @@ genScriptData =
     genInteger :: Gen Integer
     genInteger = Gen.integral
                   (Range.linear
-                    0 -- TODO: Alonzo should be -> (-fromIntegral (maxBound :: Word64) :: Integer)
-                      -- Wrapping bug needs to be fixed in Plutus library
-                    ( fromIntegral (maxBound :: Word64) :: Integer))
+                   -- TODO: Alonzo there is a bug in the plutus library.
+                   -- Restore to the following once the bug is resolved:
+                   -- (-fromIntegral ((maxBound :: Word64) - 1) :: Integer)
+                    0
+                    (fromIntegral (maxBound :: Word64) :: Integer))
 
     genByteString :: Gen ByteString
     genByteString = BS.pack <$> Gen.list (Range.linear 0 64)
