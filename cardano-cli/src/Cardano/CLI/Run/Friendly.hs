@@ -152,22 +152,7 @@ friendlyLovelace (Lovelace value) = String $ textShow value <> " Lovelace"
 friendlyMintValue :: TxMintValue ViewTx era -> Aeson.Value
 friendlyMintValue = \case
   TxMintNone -> Null
-  TxMintValue _ v _ ->
-    object
-      [ friendlyAssetId assetId .= quantity
-      | (assetId, quantity) <- valueToList v
-      ]
-
-friendlyAssetId :: AssetId -> Text
-friendlyAssetId = \case
-  AdaAssetId -> "ADA"
-  AssetId policyId (AssetName assetName) ->
-    decodeUtf8 $ serialiseToRawBytesHex policyId <> suffix
-    where
-      suffix =
-        case assetName of
-          "" -> ""
-          _ -> "." <> assetName
+  TxMintValue _ v _ -> toJSON v
 
 friendlyTxOutValue :: TxOutValue era -> Aeson.Value
 friendlyTxOutValue = \case
